@@ -60,29 +60,48 @@ them, and this section will list the exact clicks and what should happen after e
 | --- | --- |
 | [ADR-0001](docs/adr/0001-typescript-without-a-framework.md) | TypeScript and the DOM directly, no UI framework |
 | [ADR-0002](docs/adr/0002-own-i18n-layer-without-a-library.md) | A hand-written i18n layer instead of an i18n library |
-
-The injectable hash provider ADR (Web Crypto with a pure-TypeScript fallback, both validated
-against NIST vectors) is part of AC-2 and is not written yet.
+| [ADR-0003](docs/adr/0003-canonical-serialization-for-audit-entries.md) | Canonical serialization of an entry before hashing |
+| [ADR-0004](docs/adr/0004-injectable-hash-provider.md) | Injectable hash provider: Web Crypto with a pure SHA-256 fallback, both against NIST vectors |
+| [ADR-0005](docs/adr/0005-chain-scope-per-tenant-partition.md) | One chain per tenant or partition, not one global chain |
+| [ADR-0006](docs/adr/0006-merkle-odd-node-rule.md) | Merkle odd-node rule: duplicate the last node |
 
 ## 7. Evidence
 
-Measured on the AC-1 scaffold with `pnpm build` and `pnpm budget` (Node 22.23.3, Vite 8.3.4);
-`pnpm budget` is the source of truth for these numbers, and they were regenerated after the
-accessibility token fix:
+Measured after the engine landed, with `pnpm build` and `pnpm budget` (Node 22.23.3, Vite 8.3.4);
+`pnpm budget` is the source of truth for these numbers:
 
 | Metric | Measured | Budget | Result |
 | --- | --- | --- | --- |
-| Initial JS (gzip) | 3.38 KB | < 60 KB | OK |
-| CSS (gzip) | 2.69 KB | < 20 KB | OK |
-| Largest single asset (raw) | 9.94 KB | < 200 KB | OK |
-| Whole `dist` (raw) | 20.82 KB | < 400 KB | OK |
+| Initial JS (gzip) | 14.59 KB | < 60 KB | OK |
+| CSS (gzip) | 3.96 KB | < 20 KB | OK |
+| Largest single asset (raw) | 41.93 KB | < 200 KB | OK |
+| Whole `dist` (raw) | 62.01 KB | < 400 KB | OK |
 
 | Lighthouse (performance / accessibility / best-practices / SEO) | 99 / 100 / 96 / 100 | ≥ 0.95 each | OK |
 
 The four Lighthouse categories are asserted in CI on every push, so they cannot regress silently.
-Still pending, each added by the task that produces it: the NIST vectors the hash provider must
-satisfy (AC-2), the handled tampering types with the test that proves each one (AC-3), and the
-verification time for a 10,000-entry chain (AC-4).
+
+The engine evidence is measured, not asserted:
+
+- **NIST vectors.** Both SHA-256 providers (`webcrypto` and `pure`) match the FIPS 180-4 vectors for
+the empty string, `"abc"`, the 448-bit and 896-bit multi-block messages and the one-million-byte
+message (`tests/engine/hash.test.ts`).
+- **Five classified tampering kinds.** `verifyChain` names what happened and where:
+`content_tampered`, `entry_deleted`, `entries_reordered`, `entry_inserted` and `genesis_mismatch`.
+Each has a test that asserts the exact `kind` *and* the exact `index` (`tests/engine/verify.test.ts`),
+including the subtle case where an attacker recomputes the altered row's own hash and is still
+caught by the forward link.
+- **10,000-entry verification time: 530.9 ms** (wall clock, `verifyChain` only, no chain
+construction; Node 22.23.3 under happy-dom using `crypto.subtle.digest`, the same Web Crypto API the
+browser runs — not yet re-measured in a browser). See `tests/engine/performance.test.ts`.
+- **Merkle proofs.** Every index of several trees (including odd leaf counts) verifies against the
+root, a changed leaf invalidates the tree's proofs, and the empty and single-leaf cases are pinned
+(`tests/engine/merkle.test.ts`).
+- **Anchors.** An old anchor verifies against an untouched prefix and stops verifying once that
+prefix moves; an anchor taken *after* a change still verifies (`tests/engine/anchor.test.ts`).
+- **Signed export.** A real ECDSA P-256 signature over the canonical bytes of the package verifies
+on an intact chain, fails after any entry is touched, and does not verify under another key
+(`tests/engine/export.test.ts`).
 
 ## 8. How to run it
 
