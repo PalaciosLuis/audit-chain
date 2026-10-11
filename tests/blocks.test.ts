@@ -177,6 +177,27 @@ describe('block 2 — the problem', () => {
     expect(problem.textContent).toContain('La evidencia dice 7 accesos');
   });
 
+  it('names the reveal button with its own visible label', () => {
+    const problem = block('problem');
+    const button = query<HTMLButtonElement>(problem, '[data-reveal]');
+
+    // A different aria-label than the visible text fails label-content-name-mismatch.
+    expect(button.hasAttribute('aria-label')).toBe(false);
+    expect(button.hasAttribute('data-i18n-aria-label')).toBe(false);
+
+    const visible = query<HTMLElement>(button, '.log__toggle-on');
+    const hidden = query<HTMLElement>(button, '.log__toggle-off');
+    expect(visible.textContent).toBe(es['problem.reveal.show']);
+    expect(hidden.textContent).toBe(es['problem.reveal.hide']);
+    // Only the label that is visible can reach the accessible name.
+    expect(hidden.hidden).toBe(true);
+    expect(visible.hidden).toBe(false);
+
+    button.click();
+    expect(visible.hidden).toBe(true);
+    expect(hidden.hidden).toBe(false);
+  });
+
   it('keeps the log table readable in both states', () => {
     const problem = block('problem');
     const table = query<HTMLTableElement>(problem, '.log__table');

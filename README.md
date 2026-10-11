@@ -8,9 +8,8 @@ server, ever.
 
 **Live:** https://audit-chain-six.vercel.app
 
-Status: the engine and the first four blocks are published and redeploy on every push. Blocks 1 to
-4 carry the argument and a working chain builder that shows real digests; blocks 5 to 9 still render
-explicit `TODO` markers, and a recorded demo GIF lands with AC-9.
+Status: the engine, the first four blocks and the lab are published and redeploy on every push.
+Blocks 6 to 9 still render explicit `TODO` markers, and a recorded demo GIF lands with AC-9.
 
 ## 2. Problem
 
@@ -36,15 +35,21 @@ tamper with a real chain and watch the verification break exactly where it shoul
 
 ## 4. Try it in 30 seconds
 
-<!-- TODO (AC-7): replace this with the exact clicks and the expected result once block 5 lands. -->
+Block 3 is interactive: type the content of an entry, add it to the chain and watch its real SHA-256
+appear, linked to the previous hash, with the canonical bytes that were hashed shown right above it.
+Edit an earlier entry and every later digest changes.
 
-Block 3 is already interactive: type the content of an entry, add it to the chain and watch its real
-SHA-256 appear, linked to the previous hash, with the canonical bytes that were hashed shown right
-above it. Edit an earlier entry and every later digest changes.
+The lab in block 5 is the point of the page. Ten controls, and every result is computed by the engine
+this page ships:
 
-The lab controls in block 5 (alter entry #4, delete a row, reorder, insert retroactively, inspect the
-Merkle tree and the anchor timeline, export a signed package) are not implemented yet; AC-7 adds
-them, and this section will list the exact clicks and what should happen after each one.
+| Do this | Expect this |
+| --- | --- |
+| `Alter entry #4` | That row's own hash is recomputed, exactly as an attacker with database access would do. The row stays consistent with itself, so a naive check sees nothing. |
+| `Verify the chain` | "Verification breaks at entry #4 (position 4)", classified as **tampered content**, expected and actual hash side by side. Entries 1 to 3 stay intact, 5 to 8 become invalid. |
+| `Delete the selected entry`, `Swap #4 with #5`, `Insert retroactively` | Each is classified with its own kind (**deleted row**, **reordered rows**, **retroactively inserted row**) at its own position. |
+| `Anchor the current root` after tampering | The anchor taken before the change no longer matches, while one taken after does. That is what proves **when** it happened, and the only thing that catches a rewritten tail. |
+| `Check the proof` | The Merkle inclusion proof for one entry verifies against the root without revealing the others. Change that entry and the proof fails. |
+| `Generate keys and sign`, then tamper | "Valid signature: the package has not changed since it was signed" becomes "Invalid signature: the chain changed after signing". |
 
 ## 5. What it teaches
 

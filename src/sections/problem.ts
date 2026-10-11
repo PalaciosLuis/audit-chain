@@ -13,8 +13,8 @@ import { el, type ElementOptions } from './dom';
  * The evidence is marked with words as well as colour (`fila borrada`,
  * `celda editada`, struck-through original value), so the meaning survives
  * without colour vision. The reveal control is a native `<button aria-pressed>`
- * with an explicit `aria-label`: one tab stop, both states reachable with Enter
- * or Space.
+ * whose accessible name is its own visible label; the inactive label span is
+ * hidden so it never leaks into that name.
  */
 
 interface LogRow {
@@ -145,13 +145,14 @@ function buildProblem(body: HTMLElement): void {
 
   const toggle = el('button', {
     className: 'log__toggle',
-    i18nAriaLabel: 'problem.reveal.aria',
     attrs: { type: 'button', 'data-reveal': '', 'aria-pressed': 'false' },
   });
-  toggle.append(
-    el('span', { className: 'log__toggle-on', i18n: 'problem.reveal.show' }),
-    el('span', { className: 'log__toggle-off', i18n: 'problem.reveal.hide' }),
-  );
+  const showLabel = el('span', { className: 'log__toggle-on', i18n: 'problem.reveal.show' });
+  const hideLabel = el('span', { className: 'log__toggle-off', i18n: 'problem.reveal.hide' });
+  // The inactive span is hidden for real, not only with CSS: it must never leak
+  // into the accessible name, which is the visible label itself.
+  hideLabel.hidden = true;
+  toggle.append(showLabel, hideLabel);
 
   const summary = el('p', { className: 'log__summary', attrs: { 'aria-live': 'polite' } });
   const intactSummary = el('span', { i18n: 'problem.summary.intact' });
@@ -197,6 +198,9 @@ function buildProblem(body: HTMLElement): void {
     const revealed = toggle.getAttribute('aria-pressed') !== 'true';
     toggle.setAttribute('aria-pressed', String(revealed));
     body.dataset.revealed = String(revealed);
+
+    showLabel.hidden = revealed;
+    hideLabel.hidden = !revealed;
 
     for (const node of evidence) {
       node.hidden = !revealed;
