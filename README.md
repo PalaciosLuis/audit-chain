@@ -26,8 +26,9 @@ tamper with a real chain and watch the verification break exactly where it shoul
 - **Static deploy on Vercel Hobby.** No server, no database, no queue, no Docker. Everything runs
   in the browser.
 - **Real engine, not an animation.** Hashing and signing use Web Crypto on the visitor's machine.
-- **Zero runtime dependencies.** No animation, charting or i18n libraries. System fonts only, no
-  images requested over the network.
+- **Zero runtime dependencies.** No animation, charting or i18n libraries. System fonts only, so
+  the page pulls no web fonts, and there are no third-party requests: the only image the browser
+  fetches is the same-origin `/favicon.svg`.
 - **Bilingual ES/EN** with a visible toggle, without an i18n library.
 - **Performance is budgeted** and enforced in CI, alongside accessibility, keyboard support and
   `prefers-reduced-motion`.
@@ -60,14 +61,16 @@ against NIST vectors) is part of AC-2 and is not written yet.
 
 ## 7. Evidence
 
-Measured on the AC-1 scaffold with `pnpm build` and `pnpm budget` (Node 22.23.3, Vite 8.3.4):
+Measured on the AC-1 scaffold with `pnpm build` and `pnpm budget` (Node 22.23.3, Vite 8.3.4);
+`pnpm budget` is the source of truth for these numbers, and they were regenerated after the
+accessibility token fix:
 
 | Metric | Measured | Budget | Result |
 | --- | --- | --- | --- |
-| Initial JS (gzip) | 3.20 KB | < 60 KB | OK |
-| CSS (gzip) | 2.68 KB | < 20 KB | OK |
+| Initial JS (gzip) | 3.38 KB | < 60 KB | OK |
+| CSS (gzip) | 2.69 KB | < 20 KB | OK |
 | Largest single asset (raw) | 9.94 KB | < 200 KB | OK |
-| Whole `dist` (raw) | 19.72 KB | < 400 KB | OK |
+| Whole `dist` (raw) | 20.82 KB | < 400 KB | OK |
 
 <!-- TODO (AC-9): add the four Lighthouse scores, the verified NIST vectors, the count of handled
 tampering types with the test that proves each one, and the 10,000-entry verification time. -->
