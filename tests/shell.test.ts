@@ -29,13 +29,25 @@ describe('app shell', () => {
     }
   });
 
-  it('marks the body of each block with an explicit TODO (AC-N) placeholder', () => {
+  it('keeps an explicit TODO (AC-N) placeholder on the blocks that are still pending', () => {
     mountApp(root);
 
-    const todos = root.querySelectorAll('main .todo');
-    expect(todos).toHaveLength(9);
+    const todos = [...root.querySelectorAll('main .todo')];
+    // Blocks 1 to 4 (AC-6) have real content now; blocks 5 to 9 still wait.
+    expect(todos).toHaveLength(5);
     for (const todo of todos) {
-      expect(todo.textContent).toMatch(/^TODO \(AC-\d+\)$/);
+      expect(todo.textContent).toMatch(/^TODO \(AC-(7|8)\)$/);
+    }
+  });
+
+  it('replaces the placeholder with real content in the first four blocks', () => {
+    mountApp(root);
+
+    for (const id of ['hero', 'problem', 'idea', 'comparison']) {
+      const section = root.querySelector(`main #${id}`);
+      expect(section, `#${id} is mounted`).not.toBeNull();
+      expect(section?.querySelector('.todo')).toBeNull();
+      expect((section?.textContent ?? '').length).toBeGreaterThan(200);
     }
   });
 

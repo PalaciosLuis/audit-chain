@@ -10,6 +10,10 @@
   margin: 0;
 }
 
+[hidden] {
+  display: none;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
@@ -331,6 +335,534 @@ h3 {
   font-size: var(--text-sm);
 }
 
+/* ---- Block bodies (blocks 1-4) ---- */
+
+.block__body > * + * {
+  margin-block-start: var(--space-5);
+}
+
+.prose {
+  max-width: var(--measure);
+  color: var(--color-text-muted);
+}
+
+.prose--rule {
+  padding-inline-start: var(--space-4);
+  border-left: 3px solid var(--color-integrity);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.button {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-raised);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.button:hover {
+  background: var(--color-bg-inset);
+  border-color: var(--color-accent);
+}
+
+.button--primary {
+  border-color: var(--color-accent);
+}
+
+/* Readable, focusable horizontal scrollers for the two tables. */
+.table-scroll {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.table-scroll table {
+  width: 100%;
+  min-width: 46rem;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table-scroll caption {
+  padding: var(--space-4);
+  text-align: left;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table-scroll th,
+.table-scroll td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table-scroll :where(tbody tr:last-child) > th,
+.table-scroll :where(tbody tr:last-child) > td {
+  border-bottom: 0;
+}
+
+.table-scroll thead th {
+  background: var(--color-bg-raised);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.table-scroll tbody th[scope="row"] {
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+  min-width: 12rem;
+}
+
+/* ---- Block 1: the hero chain ---- */
+
+.hero {
+  margin: 0;
+}
+
+.hero__diagram {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  overflow-x: auto;
+}
+
+.hero__chain {
+  display: flex;
+  align-items: stretch;
+  min-width: max-content;
+}
+
+.hero__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 10rem;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-raised);
+  /* Base state = final state, so `animation: none` lands on a drawn chain. */
+  animation: hero-draw var(--dur-slow) var(--ease-out) both;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+.hero__link + .hero__link {
+  margin-inline-start: var(--space-5);
+}
+
+.hero__link + .hero__link::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--space-5));
+  top: 50%;
+  width: var(--space-5);
+  height: 2px;
+  background: var(--color-integrity);
+  transform-origin: left center;
+  animation: hero-wire var(--dur-fast) var(--ease-out) both;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+.hero__seq {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.hero__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.hero__hash {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.hero__flag {
+  color: var(--color-integrity);
+  font-size: var(--text-xs);
+}
+
+.hero__link[data-role="altered"] {
+  border-color: var(--color-tampered);
+  box-shadow: var(--glow-tampered);
+}
+
+.hero__link[data-role="broken"] {
+  border-color: var(--color-tampered);
+  border-style: dashed;
+}
+
+.hero__link[data-role="altered"],
+.hero__link[data-role="broken"] {
+  animation:
+    hero-draw var(--dur-slow) var(--ease-out) both,
+    hero-tamper var(--dur-base) var(--ease-out) both;
+  animation-delay: calc(var(--i) * 90ms), calc(900ms + (var(--i) * 200ms));
+}
+
+.hero__link[data-role="altered"] .hero__flag {
+  color: var(--color-tampered);
+}
+
+.hero__link[data-role="broken"] .hero__flag {
+  color: var(--color-tampered);
+}
+
+/* The wire carrying the break turns red with the link it feeds. */
+.hero__link[data-role="broken"]::before {
+  background: var(--color-tampered);
+  animation-delay: calc(900ms + (var(--i) * 200ms));
+}
+
+.hero__caption {
+  max-width: var(--measure);
+  margin-block-start: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+.hero__note {
+  max-width: var(--measure);
+  margin-block-start: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.hero__cta {
+  margin-block-start: var(--space-4);
+}
+
+.hero__next {
+  color: var(--color-accent);
+  font-weight: var(--weight-medium);
+}
+
+@keyframes hero-draw {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-wire {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes hero-tamper {
+  from {
+    border-color: var(--color-integrity);
+  }
+
+  to {
+    border-color: var(--color-tampered);
+  }
+}
+
+/* ---- Block 2: the access log ---- */
+
+.log__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-raised);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.log__toggle-off {
+  display: none;
+}
+
+[data-revealed="true"] .log__toggle-on {
+  display: none;
+}
+
+[data-revealed="true"] .log__toggle-off {
+  display: inline;
+}
+
+.log__summary {
+  max-width: var(--measure);
+  color: var(--color-text-muted);
+}
+
+[data-revealed="true"] .log__summary {
+  color: var(--color-text);
+}
+
+.log__table .log__row--deleted td,
+.log__table .log__row--deleted th {
+  text-decoration: line-through;
+}
+
+.log__original {
+  color: var(--color-text-faint);
+  margin-inline-start: var(--space-2);
+}
+
+.evidence {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-tampered);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-raised);
+  color: var(--color-tampered);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.log__findings:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--measure);
+}
+
+.log__findings li {
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--color-tampered);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--color-bg-raised);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+/* ---- Block 3: the chain builder ---- */
+
+.chain__formula {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.chain__form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.chain__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/*
+ * The grow belongs to the horizontal form row only. Inside a chain card the
+ * parent is a column, where the same flex-basis would resolve against the
+ * height and stretch a single-line field to 18rem tall.
+ */
+.chain__form .chain__field {
+  flex: 1 1 18rem;
+}
+
+.chain__field-label {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.chain__field-seq {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.chain__input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-inset);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.preimage {
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.preimage__title {
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+
+.preimage__note {
+  max-width: var(--measure);
+  margin-block-start: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.preimage__fields {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  margin-block-start: var(--space-4);
+}
+
+.preimage__fields dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.preimage__hash {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.preimage__bytes {
+  max-height: 8rem;
+  overflow: auto;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-inset);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  overflow-wrap: anywhere;
+}
+
+.chain__note {
+  max-width: var(--measure);
+  padding: var(--space-2) var(--space-4);
+  border-left: 3px solid var(--color-integrity);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--color-bg-raised);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+.chain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.chain__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-raised);
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out);
+}
+
+.chain__link[data-recomputed="true"] {
+  border-color: var(--color-accent);
+  animation: chain-recomputed var(--dur-base) var(--ease-out) both;
+}
+
+.chain__badge {
+  align-self: flex-start;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-inset);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.chain__hashes {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  margin-block-start: var(--space-1);
+}
+
+.chain__hashes dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.chain__hash {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.chain__count {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.chain__next {
+  color: var(--color-text);
+}
+
+@keyframes chain-recomputed {
+  from {
+    border-color: var(--color-integrity);
+  }
+
+  to {
+    border-color: var(--color-accent);
+  }
+}
+
+/* ---- Block 4: the comparison table ---- */
+
+.compare__row--best {
+  background: var(--color-bg-raised);
+}
+
 /* ---- Honesty seal ---- */
 
 .site-footer {
@@ -387,5 +919,17 @@ h3 {
   *::after {
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
+  }
+
+  /*
+   * The hero and the chain rows paint their final state as the base style, so
+   * dropping the animation lands on the finished picture immediately instead of
+   * replaying it: a drawn chain with the break already propagated, and the
+   * recomputed rows already flagged.
+   */
+  .hero__link,
+  .hero__link + .hero__link::before,
+  .chain__link[data-recomputed="true"] {
+    animation: none;
   }
 }

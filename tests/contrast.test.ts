@@ -289,6 +289,132 @@ const OVERLAY_PAIRS: readonly TextPair[] = [
     fg: '--color-text',
     surface: 'background under the accent tint',
   },
+  {
+    label: '.prose (muted body copy on the tinted page)',
+    fg: '--color-text-muted',
+    surface: 'background under the accent tint',
+    selector: '.prose',
+  },
+  {
+    label: '.hero__caption (text on the hero panel)',
+    fg: '--color-text',
+    surface: 'elevated',
+    selector: '.hero__caption',
+  },
+  {
+    label: '.hero__note (muted on the hero panel)',
+    fg: '--color-text-muted',
+    surface: 'elevated',
+    selector: '.hero__note',
+  },
+  {
+    label: '.hero__hash (muted prefix on a link card)',
+    fg: '--color-text-muted',
+    surface: 'raised',
+    selector: '.hero__hash',
+  },
+  {
+    label: '.hero__flag (integrity tick on a link card)',
+    fg: '--color-integrity',
+    surface: 'raised',
+    selector: '.hero__flag',
+  },
+  {
+    label: '.hero__link[data-role="altered"] .hero__flag (tampered cross on a link card)',
+    fg: '--color-tampered',
+    surface: 'raised',
+    selector: '.hero__link[data-role="altered"] .hero__flag',
+  },
+  {
+    label: '.hero__next (accent link on the tinted page)',
+    fg: '--color-accent',
+    surface: 'background under the accent tint',
+    selector: '.hero__next',
+  },
+  {
+    label: '.log__summary (muted summary on the tinted page)',
+    fg: '--color-text-muted',
+    surface: 'background under the accent tint',
+    selector: '.log__summary',
+  },
+  {
+    label: '[data-revealed="true"] .log__summary (text summary on the tinted page)',
+    fg: '--color-text',
+    surface: 'background under the accent tint',
+    selector: '[data-revealed="true"] .log__summary',
+  },
+  {
+    label: '.log__original (faint struck-through value on the table)',
+    fg: '--color-text-faint',
+    surface: 'elevated',
+    selector: '.log__original',
+  },
+  {
+    label: '.evidence (tampered badge on its raised chip)',
+    fg: '--color-tampered',
+    surface: 'raised',
+    selector: '.evidence',
+  },
+  {
+    label: '.log__findings li (text inside a tampered finding)',
+    fg: '--color-text',
+    surface: 'raised',
+    selector: '.log__findings li',
+  },
+  {
+    label: '.chain__field-label (muted field label on the tinted page)',
+    fg: '--color-text-muted',
+    surface: 'background under the accent tint',
+    selector: '.chain__field-label',
+  },
+  {
+    label: '.chain__input (typed content on the inset field)',
+    fg: '--color-text',
+    surface: 'inset',
+    selector: '.chain__input',
+  },
+  {
+    label: '.preimage__hash (digest on the preimage panel)',
+    fg: '--color-text',
+    surface: 'raised',
+    selector: '.preimage__hash',
+  },
+  {
+    label: '.preimage__bytes (canonical bytes on the inset block)',
+    fg: '--color-text-muted',
+    surface: 'inset',
+    selector: '.preimage__bytes',
+  },
+  {
+    label: '.chain__badge (recomputed badge on its chip)',
+    fg: '--color-accent',
+    surface: 'inset',
+    selector: '.chain__badge',
+  },
+  {
+    label: '.chain__hash (entry hashes on a chain card)',
+    fg: '--color-text',
+    surface: 'raised',
+    selector: '.chain__hash',
+  },
+  {
+    label: '.button (button label on its raised surface)',
+    fg: '--color-text',
+    surface: 'raised',
+    selector: '.button',
+  },
+  {
+    label: '.table-scroll thead th (column header on the raised header row)',
+    fg: '--color-text',
+    surface: 'raised',
+    selector: '.table-scroll thead th',
+  },
+  {
+    label: '.table-scroll caption (caption on the table surface)',
+    fg: '--color-text-muted',
+    surface: 'elevated',
+    selector: '.table-scroll caption',
+  },
 ];
 
 const TEXT_PAIRS: readonly TextPair[] = [...SYSTEMATIC_PAIRS, ...OVERLAY_PAIRS];
@@ -301,6 +427,7 @@ const FOCUS_SURFACES = [
   'inset',
   'background under the accent tint',
   'accent wash over elevated',
+  'surface under the accent tint',
 ] as const satisfies readonly SurfaceName[];
 
 function measureFailures(
@@ -356,6 +483,20 @@ const BACKGROUND_WIRING: ReadonlyArray<{ readonly selector: string; readonly tok
   { selector: '.todo', token: '--color-surface' },
   { selector: '.block__num', token: '--color-integrity-soft' },
   { selector: '.honesty', token: '--color-integrity-soft' },
+  { selector: '.table-scroll', token: '--color-bg-elevated' },
+  { selector: '.table-scroll thead th', token: '--color-bg-raised' },
+  { selector: '.hero__diagram', token: '--color-bg-elevated' },
+  { selector: '.hero__link', token: '--color-bg-raised' },
+  { selector: '.evidence', token: '--color-bg-raised' },
+  { selector: '.log__findings li', token: '--color-bg-raised' },
+  { selector: '.button', token: '--color-bg-raised' },
+  { selector: '.chain__input', token: '--color-bg-inset' },
+  { selector: '.preimage', token: '--color-bg-raised' },
+  { selector: '.preimage__bytes', token: '--color-bg-inset' },
+  { selector: '.chain__note', token: '--color-bg-raised' },
+  { selector: '.chain__link', token: '--color-bg-raised' },
+  { selector: '.chain__badge', token: '--color-bg-inset' },
+  { selector: '.compare__row--best', token: '--color-bg-raised' },
 ];
 
 describe('WCAG 2.x contrast', () => {
