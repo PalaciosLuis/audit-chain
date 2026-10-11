@@ -415,6 +415,54 @@ const OVERLAY_PAIRS: readonly TextPair[] = [
     surface: 'elevated',
     selector: '.table-scroll caption',
   },
+  {
+    label: '.lab__statement (statement on its own surface under the tint)',
+    fg: '--color-text',
+    surface: 'surface under the accent tint',
+    selector: '.lab__statement',
+  },
+  {
+    label: '.lab__badge[data-state="valid"] (valid badge on a chain card)',
+    fg: '--color-integrity',
+    surface: 'raised',
+    selector: '.lab__badge[data-state="valid"]',
+  },
+  {
+    label: '.lab__badge[data-state="broken"] (broken badge on a chain card)',
+    fg: '--color-tampered',
+    surface: 'raised',
+    selector: '.lab__badge[data-state="broken"]',
+  },
+  {
+    label: '.lab__badge[data-state="invalid"] (invalid badge on a chain card)',
+    fg: '--color-text-muted',
+    surface: 'raised',
+    selector: '.lab__badge[data-state="invalid"]',
+  },
+  {
+    label: '.lab__break-kind (break name inside a finding)',
+    fg: '--color-tampered',
+    surface: 'raised',
+    selector: '.lab__break-kind',
+  },
+  {
+    label: '.lab__key (public key and signature on the inset block)',
+    fg: '--color-text-muted',
+    surface: 'inset',
+    selector: '.lab__key',
+  },
+  {
+    label: '.lab__anchor-status[data-ok="true"] (matching anchor on an anchor row)',
+    fg: '--color-integrity',
+    surface: 'raised',
+    selector: '.lab__anchor-status[data-ok="true"]',
+  },
+  {
+    label: '.lab__anchor-status[data-ok="false"] (stale anchor on an anchor row)',
+    fg: '--color-tampered',
+    surface: 'raised',
+    selector: '.lab__anchor-status[data-ok="false"]',
+  },
 ];
 
 const TEXT_PAIRS: readonly TextPair[] = [...SYSTEMATIC_PAIRS, ...OVERLAY_PAIRS];
@@ -497,6 +545,14 @@ const BACKGROUND_WIRING: ReadonlyArray<{ readonly selector: string; readonly tok
   { selector: '.chain__link', token: '--color-bg-raised' },
   { selector: '.chain__badge', token: '--color-bg-inset' },
   { selector: '.compare__row--best', token: '--color-bg-raised' },
+  { selector: '.lab__input, .lab__select', token: '--color-bg-inset' },
+  { selector: '.lab__statement', token: '--color-surface' },
+  { selector: '.lab__link', token: '--color-bg-raised' },
+  { selector: '.lab__verify, .lab__panel', token: '--color-bg-elevated' },
+  { selector: '.lab__break', token: '--color-bg-raised' },
+  { selector: '.lab__proof-node', token: '--color-bg-inset' },
+  { selector: '.lab__anchor', token: '--color-bg-raised' },
+  { selector: '.lab__key', token: '--color-bg-inset' },
 ];
 
 describe('WCAG 2.x contrast', () => {

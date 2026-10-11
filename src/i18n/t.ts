@@ -6,6 +6,27 @@ export type Lang = 'es' | 'en';
 /** A flat key to string dictionary. Both languages share the exact same keys. */
 export type Dictionary = Record<string, string>;
 
+type LangListener = (lang: Lang) => void;
+
+/**
+ * Listeners notified after the active language changes. The lab uses this to
+ * repaint the copy it builds at runtime (statements and panel results), which
+ * the shell's static `applyTranslations` cannot reach.
+ */
+const langListeners = new Set<LangListener>();
+
+/**
+ * Subscribes to language changes and returns an unsubscribe function. The
+ * listener fires on every `setLang` call, including when the choice is not
+ * persisted, because the in-memory language still changed.
+ */
+export function onLangChange(listener: LangListener): () => void {
+  langListeners.add(listener);
+  return () => {
+    langListeners.delete(listener);
+  };
+}
+
 const dictionaries: Record<Lang, Dictionary> = { es, en };
 
 const STORAGE_KEY = 'audit-chain:lang';
@@ -104,6 +125,10 @@ export function initLang(): Lang {
 export function setLang(lang: Lang, options: { persist?: boolean } = {}): void {
   currentLang = lang;
   syncDocumentMeta();
+
+  for (const listener of langListeners) {
+    listener(currentLang);
+  }
 
   if (options.persist === false) {
     return;

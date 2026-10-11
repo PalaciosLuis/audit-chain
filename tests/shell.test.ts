@@ -33,17 +33,17 @@ describe('app shell', () => {
     mountApp(root);
 
     const todos = [...root.querySelectorAll('main .todo')];
-    // Blocks 1 to 4 (AC-6) have real content now; blocks 5 to 9 still wait.
-    expect(todos).toHaveLength(5);
+    // Blocks 1 to 5 (AC-6, AC-7) have real content now; blocks 6 to 9 still wait.
+    expect(todos).toHaveLength(4);
     for (const todo of todos) {
-      expect(todo.textContent).toMatch(/^TODO \(AC-(7|8)\)$/);
+      expect(todo.textContent).toMatch(/^TODO \(AC-8\)$/);
     }
   });
 
-  it('replaces the placeholder with real content in the first four blocks', () => {
+  it('replaces the placeholder with real content in the first five blocks', () => {
     mountApp(root);
 
-    for (const id of ['hero', 'problem', 'idea', 'comparison']) {
+    for (const id of ['hero', 'problem', 'idea', 'comparison', 'demo']) {
       const section = root.querySelector(`main #${id}`);
       expect(section, `#${id} is mounted`).not.toBeNull();
       expect(section?.querySelector('.todo')).toBeNull();
