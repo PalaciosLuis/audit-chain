@@ -6,10 +6,12 @@ server, ever.
 
 ## 1. Demo
 
-<!-- TODO (AC-9): replace this placeholder with the recorded demo GIF and the live Vercel URL. -->
+**Live:** https://audit-chain-six.vercel.app
 
-The interactive lab and the animated hero are built in AC-6 and AC-7. Until then this repository
-is the scaffold: the design system, the bilingual shell, the toolchain and CI.
+Status: the scaffold is published and redeploys on every push. The page currently renders the
+nine content blocks with explicit `TODO` markers; the engine (AC-2 to AC-5) and the interactive
+lab and animated hero (AC-6, AC-7) are the next work units, and a recorded demo GIF lands with
+AC-9.
 
 ## 2. Problem
 
@@ -35,11 +37,12 @@ tamper with a real chain and watch the verification break exactly where it shoul
 
 ## 4. Try it in 30 seconds
 
-<!-- TODO (AC-7): document the exact lab controls once block 5 is implemented. -->
+<!-- TODO (AC-7): replace this with the exact clicks and the expected result once block 5 lands. -->
 
-The lab controls (alter entry #4, delete a row, reorder, insert retroactively, inspect the Merkle
-tree and the anchor timeline, export a signed package) do not exist yet. This section will list
-the exact clicks and the expected result when AC-7 lands.
+The lab controls (add entries, alter entry #4, delete a row, reorder, insert retroactively, inspect
+the Merkle tree and the anchor timeline, export a signed package) are not implemented yet, which is
+why the live page is read-only today: it is the shell, not the demo. When AC-7 lands, this section
+lists the exact clicks and what should happen after each one.
 
 ## 5. What it teaches
 
@@ -72,8 +75,12 @@ accessibility token fix:
 | Largest single asset (raw) | 9.94 KB | < 200 KB | OK |
 | Whole `dist` (raw) | 20.82 KB | < 400 KB | OK |
 
-<!-- TODO (AC-9): add the four Lighthouse scores, the verified NIST vectors, the count of handled
-tampering types with the test that proves each one, and the 10,000-entry verification time. -->
+| Lighthouse (performance / accessibility / best-practices / SEO) | 99 / 100 / 96 / 100 | ≥ 0.95 each | OK |
+
+The four Lighthouse categories are asserted in CI on every push, so they cannot regress silently.
+Still pending, each added by the task that produces it: the NIST vectors the hash provider must
+satisfy (AC-2), the handled tampering types with the test that proves each one (AC-3), and the
+verification time for a 10,000-entry chain (AC-4).
 
 ## 8. How to run it
 
