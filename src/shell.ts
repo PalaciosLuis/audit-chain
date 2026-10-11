@@ -144,17 +144,31 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): void {
     }
   }
 
+  let progressRatio = 0;
+  let progressScheduled = false;
+
+  function renderProgressLabel(): void {
+    if (progressLabel !== null) {
+      progressLabel.textContent = t('shell.progress.label', {
+        percent: Math.round(progressRatio * 100),
+      });
+    }
+  }
+
+  /**
+   * Measures the scroll position and the active block. Reading layout here would
+   * force a synchronous reflow during the initial render, so the first call is
+   * deferred to the next frame through `scheduleProgress()`.
+   */
   function updateProgress(): void {
     const doc = document.documentElement;
     const max = doc.scrollHeight - doc.clientHeight;
-    const ratio = max > 0 ? Math.min(1, Math.max(0, doc.scrollTop / max)) : 0;
+    progressRatio = max > 0 ? Math.min(1, Math.max(0, doc.scrollTop / max)) : 0;
 
     if (progressBar !== null) {
-      progressBar.style.transform = `scaleX(${ratio})`;
+      progressBar.style.transform = `scaleX(${progressRatio})`;
     }
-    if (progressLabel !== null) {
-      progressLabel.textContent = t('shell.progress.label', { percent: Math.round(ratio * 100) });
-    }
+    renderProgressLabel();
 
     const active = pickActiveBlock(sections);
     indexLinks.forEach((link, index) => {
@@ -165,6 +179,22 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): void {
         link.removeAttribute('aria-current');
       }
     });
+  }
+
+  function scheduleProgress(): void {
+    if (progressScheduled) {
+      return;
+    }
+    progressScheduled = true;
+    const run = (): void => {
+      progressScheduled = false;
+      updateProgress();
+    };
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(run);
+    } else {
+      run();
+    }
   }
 
   function applyLang(next: Lang): void {
@@ -182,7 +212,8 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): void {
     }
     applyTranslations(root);
     applyTheme(theme);
-    updateProgress();
+    renderProgressLabel();
+    scheduleProgress();
   }
 
   if (themeButton !== null) {

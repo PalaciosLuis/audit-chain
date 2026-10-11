@@ -38,7 +38,6 @@ import {
   verifyProof,
 } from '../engine';
 import { onLangChange, t } from '../i18n/t';
-import type { BlockSpec } from './base';
 import { shortHash } from './chain-model';
 import { el } from './dom';
 import {
@@ -252,7 +251,7 @@ function buildVerifyPanel(): {
 function buildMerklePanel(): { panel: HTMLElement; refs: MerkleRefs } {
   const root = el('dd', { className: 'lab__hash', attrs: { 'data-demo-merkle-root': '' } });
   const saved = el('dd', { className: 'lab__hash', attrs: { 'data-demo-merkle-saved': '' } });
-  const relation = el('dd', {
+  const relation = el('p', {
     className: 'lab__value',
     attrs: { 'data-demo-merkle-relation': '' },
   });
@@ -274,6 +273,11 @@ function buildMerklePanel(): { panel: HTMLElement; refs: MerkleRefs } {
     attrs: { type: 'button', 'data-demo-merkle-check': '' },
   });
 
+  const leafField = el('dd', { className: 'lab__field-value' });
+  leafField.append(leaf);
+  const proofField = el('dd', { className: 'lab__field-value' });
+  proofField.append(proof);
+
   const fields = el('dl', { className: 'lab__fields lab__fields--panel' });
   fields.append(
     el('dt', { i18n: 'demo.merkle.current' }),
@@ -281,9 +285,9 @@ function buildMerklePanel(): { panel: HTMLElement; refs: MerkleRefs } {
     el('dt', { i18n: 'demo.merkle.saved' }),
     saved,
     el('dt', { i18n: 'demo.merkle.leaf' }),
-    leaf,
+    leafField,
     el('dt', { i18n: 'demo.merkle.proof' }),
-    proof,
+    proofField,
   );
 
   const panel = el('section', {
@@ -355,14 +359,19 @@ function buildExportPanel(): { panel: HTMLElement; refs: ExportRefs } {
     attrs: { type: 'button', 'data-demo-export-sign': '' },
   });
 
+  const keyField = el('dd', { className: 'lab__field-value' });
+  keyField.append(publicKey);
+  const signatureField = el('dd', { className: 'lab__field-value' });
+  signatureField.append(signature);
+
   const fields = el('dl', { className: 'lab__fields lab__fields--panel' });
   fields.append(
     el('dt', { i18n: 'demo.export.algorithm' }),
     el('dd', { className: 'lab__value mono', text: 'ECDSA-P256-SHA256' }),
     el('dt', { i18n: 'demo.export.publicKey' }),
-    publicKey,
+    keyField,
     el('dt', { i18n: 'demo.export.signature' }),
-    signature,
+    signatureField,
   );
 
   const panel = el('section', {
@@ -384,7 +393,13 @@ function buildExportPanel(): { panel: HTMLElement; refs: ExportRefs } {
 /* The lab                                                                    */
 /* -------------------------------------------------------------------------- */
 
-function buildDemo(body: HTMLElement): void {
+/**
+ * Builds the lab body. Loaded on demand through `mountLazyBlock` (see
+ * `src/sections/index.ts`), so this module is code-split out of the first paint.
+ * Resolves once the first full paint is done, which is what the marker attribute
+ * waits on.
+ */
+export function buildDemo(body: HTMLElement): Promise<void> {
   let chain: LedgerChain = [];
   let baselineRoot = '';
   let anchorRounds: { id: number; anchors: readonly Anchor[] }[] = [];
@@ -951,12 +966,5 @@ function buildDemo(body: HTMLElement): void {
     }
   });
 
-  void bootstrap();
+  return bootstrap();
 }
-
-export const demoBlock: BlockSpec = {
-  num: 5,
-  id: 'demo',
-  titleKey: 'block.demo.title',
-  build: buildDemo,
-};

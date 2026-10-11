@@ -335,6 +335,19 @@ h3 {
   font-size: var(--text-sm);
 }
 
+/* Placeholder shown while a lazily mounted block is still loading. */
+.block__placeholder {
+  max-width: var(--measure);
+  margin-block-start: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
 /* ---- Block bodies (blocks 1-4) ---- */
 
 .block__body > * + * {
@@ -1102,6 +1115,11 @@ h3 {
 .lab__fields--panel {
   grid-template-columns: minmax(9rem, max-content) minmax(0, 1fr);
   align-items: start;
+}
+
+/* Value cells wrap a select, a list or a <pre> so the <dl> keeps only dt/dd. */
+.lab__field-value {
+  min-width: 0;
 }
 
 .lab__proof {

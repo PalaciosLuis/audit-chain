@@ -78,6 +78,9 @@ function rowStates(scope: ParentNode): string[] {
 
 async function ready(scope: HTMLElement): Promise<void> {
   await vi.waitFor(() => {
+    expect(scope.querySelector('[data-lazy-state="ready"]')).not.toBeNull();
+  });
+  await vi.waitFor(() => {
     expect(entryCount(scope)).toBe(LAB_SEED.length);
   });
   await vi.waitFor(() => {
@@ -316,6 +319,28 @@ describe('block 5 — the lab chain', () => {
     );
     expect(badges).toContain(es['demo.entry.state.broken']);
     expect(badges).toContain(es['demo.entry.state.invalid']);
+  });
+});
+
+describe('block 5 — semantic fields', () => {
+  it('keeps every definition list to term/description pairs and no orphan dd', async () => {
+    const lab = demo();
+    await ready(lab);
+
+    const lists = [...lab.querySelectorAll('dl')];
+    expect(lists.length).toBeGreaterThan(0);
+    for (const list of lists) {
+      for (const child of list.children) {
+        expect(
+          ['DT', 'DD'],
+          `${list.className} contains a <${child.tagName.toLowerCase()}>`,
+        ).toContain(child.tagName);
+      }
+    }
+
+    for (const value of lab.querySelectorAll('dd')) {
+      expect(value.parentElement?.tagName, '<dd> must live inside a <dl>').toBe('DL');
+    }
   });
 });
 

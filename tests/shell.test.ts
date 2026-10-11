@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { mountApp } from '../src/shell';
 
@@ -40,15 +40,23 @@ describe('app shell', () => {
     }
   });
 
-  it('replaces the placeholder with real content in the first five blocks', () => {
+  it('replaces the placeholder with real content in the first five blocks', async () => {
     mountApp(root);
 
-    for (const id of ['hero', 'problem', 'idea', 'comparison', 'demo']) {
+    for (const id of ['hero', 'problem', 'idea', 'comparison']) {
       const section = root.querySelector(`main #${id}`);
       expect(section, `#${id} is mounted`).not.toBeNull();
       expect(section?.querySelector('.todo')).toBeNull();
       expect((section?.textContent ?? '').length).toBeGreaterThan(200);
     }
+
+    // Block 5 is mounted lazily, so its body arrives a tick after the shell.
+    const demo = root.querySelector('main #demo');
+    await vi.waitFor(() => {
+      expect(demo?.querySelector('[data-lazy-state="ready"]')).not.toBeNull();
+    });
+    expect(demo?.querySelector('.todo')).toBeNull();
+    expect((demo?.textContent ?? '').length).toBeGreaterThan(200);
   });
 
   it('changes a visible string immediately when the language toggle is used', () => {
