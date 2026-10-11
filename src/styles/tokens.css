@@ -1,0 +1,187 @@
+/*
+ * audit-chain design tokens.
+ * Dark-first and forensic: near-black blue-tinted background, elevated surfaces,
+ * hairline borders, and the integrity-green / tampered-red opposition that is the
+ * visual language of the page. System font stacks only: 0 KB of fonts, 0 requests.
+ */
+
+:root {
+  /* ---- Color: dark-first (default) ---- */
+  --color-bg: #070b12;
+  --color-bg-elevated: #0c1320;
+  --color-bg-raised: #111a2b;
+  --color-bg-inset: #050810;
+
+  --color-surface: rgba(148, 180, 255, 0.04);
+  --color-surface-hover: rgba(148, 180, 255, 0.08);
+
+  --color-border: rgba(148, 180, 255, 0.14);
+  --color-border-strong: rgba(148, 180, 255, 0.28);
+
+  --color-text: #e7eef9;
+  --color-text-muted: #9db0cc;
+  --color-text-faint: #6b7d99;
+
+  --color-integrity: #35d07f;
+  --color-integrity-strong: #19b566;
+  --color-integrity-soft: rgba(53, 208, 127, 0.14);
+
+  --color-tampered: #ff5d5d;
+  --color-tampered-strong: #e23b3b;
+  --color-tampered-soft: rgba(255, 93, 93, 0.14);
+
+  --color-accent: #6ea8ff;
+  --color-accent-soft: rgba(110, 168, 255, 0.16);
+  --color-focus: #8fbcff;
+
+  /* ---- Typography ---- */
+  --font-sans: system-ui, -apple-system, "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif;
+  --font-mono:
+    ui-monospace, sfmono-regular, "SF Mono", menlo, consolas, "Liberation Mono", monospace;
+
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+
+  /* ~72-character comfortable reading column for prose. */
+  --measure: 68ch;
+
+  /* ---- Space (4px base) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --header-height: 4rem;
+  --index-width: 15rem;
+  --content-width: 50rem;
+  --page-width: 82rem;
+
+  /* ---- Radii ---- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 24px 60px -24px rgba(0, 0, 0, 0.85);
+  --glow-integrity: 0 0 0 1px rgba(53, 208, 127, 0.35), 0 0 24px -6px rgba(53, 208, 127, 0.5);
+  --glow-tampered: 0 0 0 1px rgba(255, 93, 93, 0.35), 0 0 24px -6px rgba(255, 93, 93, 0.5);
+
+  /* ---- Motion (purposeful and short, 120-240 ms, ease-out) ---- */
+  --dur-instant: 90ms;
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --dur-slow: 240ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --color-bg: #f3f6fc;
+  --color-bg-elevated: #ffffff;
+  --color-bg-raised: #eef3fb;
+  --color-bg-inset: #e6ecf6;
+
+  --color-surface: rgba(16, 38, 78, 0.03);
+  --color-surface-hover: rgba(16, 38, 78, 0.07);
+
+  --color-border: rgba(16, 38, 78, 0.14);
+  --color-border-strong: rgba(16, 38, 78, 0.28);
+
+  --color-text: #0b1626;
+  --color-text-muted: #45587a;
+  --color-text-faint: #7788a4;
+
+  --color-integrity: #0f9d58;
+  --color-integrity-strong: #0b7a44;
+  --color-integrity-soft: rgba(15, 157, 88, 0.12);
+
+  --color-tampered: #d92d20;
+  --color-tampered-strong: #b42318;
+  --color-tampered-soft: rgba(217, 45, 32, 0.12);
+
+  --color-accent: #2563eb;
+  --color-accent-soft: rgba(37, 99, 235, 0.12);
+  --color-focus: #1d4ed8;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.08);
+  --shadow-md: 0 8px 24px -12px rgba(16, 24, 40, 0.25);
+  --shadow-lg: 0 24px 60px -24px rgba(16, 24, 40, 0.35);
+  --glow-integrity: 0 0 0 1px rgba(15, 157, 88, 0.3), 0 0 24px -8px rgba(15, 157, 88, 0.45);
+  --glow-tampered: 0 0 0 1px rgba(217, 45, 32, 0.3), 0 0 24px -8px rgba(217, 45, 32, 0.45);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --color-bg: #f3f6fc;
+    --color-bg-elevated: #ffffff;
+    --color-bg-raised: #eef3fb;
+    --color-bg-inset: #e6ecf6;
+
+    --color-surface: rgba(16, 38, 78, 0.03);
+    --color-surface-hover: rgba(16, 38, 78, 0.07);
+
+    --color-border: rgba(16, 38, 78, 0.14);
+    --color-border-strong: rgba(16, 38, 78, 0.28);
+
+    --color-text: #0b1626;
+    --color-text-muted: #45587a;
+    --color-text-faint: #7788a4;
+
+    --color-integrity: #0f9d58;
+    --color-integrity-strong: #0b7a44;
+    --color-integrity-soft: rgba(15, 157, 88, 0.12);
+
+    --color-tampered: #d92d20;
+    --color-tampered-strong: #b42318;
+    --color-tampered-soft: rgba(217, 45, 32, 0.12);
+
+    --color-accent: #2563eb;
+    --color-accent-soft: rgba(37, 99, 235, 0.12);
+    --color-focus: #1d4ed8;
+
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.08);
+    --shadow-md: 0 8px 24px -12px rgba(16, 24, 40, 0.25);
+    --shadow-lg: 0 24px 60px -24px rgba(16, 24, 40, 0.35);
+    --glow-integrity: 0 0 0 1px rgba(15, 157, 88, 0.3), 0 0 24px -8px rgba(15, 157, 88, 0.45);
+    --glow-tampered: 0 0 0 1px rgba(217, 45, 32, 0.3), 0 0 24px -8px rgba(217, 45, 32, 0.45);
+
+    color-scheme: light;
+  }
+}
