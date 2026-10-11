@@ -8,10 +8,9 @@ server, ever.
 
 **Live:** https://audit-chain-six.vercel.app
 
-Status: the scaffold is published and redeploys on every push. The page currently renders the
-nine content blocks with explicit `TODO` markers; the engine (AC-2 to AC-5) and the interactive
-lab and animated hero (AC-6, AC-7) are the next work units, and a recorded demo GIF lands with
-AC-9.
+Status: the engine and the first four blocks are published and redeploy on every push. Blocks 1 to
+4 carry the argument and a working chain builder that shows real digests; blocks 5 to 9 still render
+explicit `TODO` markers, and a recorded demo GIF lands with AC-9.
 
 ## 2. Problem
 
@@ -39,10 +38,13 @@ tamper with a real chain and watch the verification break exactly where it shoul
 
 <!-- TODO (AC-7): replace this with the exact clicks and the expected result once block 5 lands. -->
 
-The lab controls (add entries, alter entry #4, delete a row, reorder, insert retroactively, inspect
-the Merkle tree and the anchor timeline, export a signed package) are not implemented yet, which is
-why the live page is read-only today: it is the shell, not the demo. When AC-7 lands, this section
-lists the exact clicks and what should happen after each one.
+Block 3 is already interactive: type the content of an entry, add it to the chain and watch its real
+SHA-256 appear, linked to the previous hash, with the canonical bytes that were hashed shown right
+above it. Edit an earlier entry and every later digest changes.
+
+The lab controls in block 5 (alter entry #4, delete a row, reorder, insert retroactively, inspect the
+Merkle tree and the anchor timeline, export a signed package) are not implemented yet; AC-7 adds
+them, and this section will list the exact clicks and what should happen after each one.
 
 ## 5. What it teaches
 
